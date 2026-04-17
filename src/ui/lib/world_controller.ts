@@ -1,17 +1,25 @@
 // ui/states/world_controller.ts
 import { World } from "../../engine/world.svelte";
-import { SceneManager } from "./scene_manager.svelte";
+import { DEFAULT_SCENE, SceneManager } from "./scene_manager.svelte";
 
 const world = new World();
 const scenes = new SceneManager();
 
-// rooms
+// ==== zones ==== 
+// hub
 const hub_id = world.spawn_zone("Hub", "hub");
+// buildings
 const tavern_id = world.spawn_zone("Tavern", "building")
 const forge_id = world.spawn_zone("Forge", "building")
 
 world.connect_zones(hub_id, tavern_id);
 world.connect_zones(hub_id, forge_id);
+
+// rooms
+const room_a_id = world.spawn_zone("room_a", "room")
+
+world.connect_zones(tavern_id, room_a_id);
+// =============== 
 
 // entities
 const npc_id = world.spawn_entity(
@@ -25,7 +33,7 @@ const npc_id = world.spawn_entity(
 ).unwrap();
 
 // init starting scene
-scenes.navigate({ id: "hub", zone_id: hub_id });
+scenes.navigate(DEFAULT_SCENE);
 
 setInterval(() => {
     world.update();

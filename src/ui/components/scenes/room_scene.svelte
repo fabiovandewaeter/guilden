@@ -1,4 +1,4 @@
-<!-- ui/components/scene/building_scene.svelte -->
+<!-- ui/components/scene/room_scene.svelte -->
 <script lang="ts">
     import type { ZoneId } from "../../../engine/map/zone.svelte";
     import { scenes, world } from "../../lib/world_controller";
