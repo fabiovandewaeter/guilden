@@ -1,6 +1,6 @@
 // src/ui/scene.ts
 import type { EntityId } from "../../engine/entities/entity.svelte";
-import type { ZoneId } from "../../engine/map/zone.svelte";
+import type { ZoneId } from "../../engine/zones/zone.svelte";
 import type { Opt } from "../../engine/utils/option";
 
 export type SceneKind = Scene['id'];

@@ -1,6 +1,6 @@
 <!-- ui/components/scene/building_scene.svelte -->
 <script lang="ts">
-    import type { ZoneId } from "../../../engine/map/zone.svelte";
+    import type { ZoneId } from "../../../engine/zones/zone.svelte";
     import { scenes, world } from "../../lib/world_controller";
 
     interface Props {
@@ -22,6 +22,12 @@
 
 <button onclick={() => scenes.leave_current_scene()}>Return</button>
 <h2>{building.name}</h2>
+
+<section>
+    <h3>random things</h3>
+    <p>sword: {building.swords}</p>
+    <p>leftover_ms: {building.leftover_ms}</p>
+</section>
 
 <section>
     <h3>Rooms</h3>

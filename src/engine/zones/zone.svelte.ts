@@ -1,4 +1,4 @@
-// engine/map/types.svelte.ts
+// engine/zones/types.svelte.ts
 import type { EntityId } from "../entities/entity.svelte";
 import { type Result, err, ok } from "../utils/result";
 
@@ -12,10 +12,27 @@ export class Zone {
     entities: EntityId[] = $state([]);
     connected_zones: ZoneId[] = $state([]);
 
+    // TODO: to remove
+    swords: number = $state(0);
+    public leftover_ms: number = $state(0);
+
     constructor(id: ZoneId, name: string, kind: ZoneKind) {
         this.id = id;
         this.name = name;
         this.kind = kind;
+    }
+
+    tick(delta_ms: number) {
+        if (this.kind !== "building") return;
+
+        this.leftover_ms += delta_ms;
+        const MS_PER_SWORD = 60_000; // 1 minute
+
+        const produced = Math.floor(this.leftover_ms / MS_PER_SWORD);
+        if (produced > 0) {
+            this.swords += produced;
+            this.leftover_ms %= MS_PER_SWORD;
+        }
     }
 
     contains_entity(entity_id: EntityId): boolean {

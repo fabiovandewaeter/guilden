@@ -4,9 +4,9 @@ import type { Entity, EntityId, Stats } from "./entities/entity.svelte";
 import type { GameState } from "./game_state";
 import { Opt, none, some } from "./utils/option";
 import { Result, err, ok } from "./utils/result";
-import type { Zone, ZoneId, ZoneKind } from "./map/zone.svelte";
-import { ZoneRepository } from "./map/zone_repository.svelte";
-import { move_entity_to_zone, connect_zones } from "./map/zone_service";
+import type { Zone, ZoneId, ZoneKind } from "./zones/zone.svelte";
+import { ZoneRepository } from "./zones/zone_repository.svelte";
+import { move_entity_to_zone, connect_zones } from "./zones/zone_service";
 
 export class World {
     private _state: GameState = $state({ mode: "hub" });
@@ -28,17 +28,13 @@ export class World {
     // spawners
     // ========
     /** spawn entity AND move it to the zone but fail if assignated zone doesn't exist */
-    spawn_entity(name: string, zone_id: ZoneId, max_stats: Stats): Result<EntityId, string> {
-        let zone_res = this.zone_repo.get_or_err(zone_id);
-        if (zone_res.is_err()) return err(zone_res.error);
+    spawn_entity(name: string, zone_id: ZoneId, max_stats: Stats): EntityId {
+        this.zone_repo.get_or_err(zone_id).expect(`Cannot spawn entity: Zone ${zone_id} is missing`);
 
-        let entity_id_res = this.entity_repo.spawn(name, zone_id, max_stats);
-        if (entity_id_res.is_err()) return err(entity_id_res.error);
-        let entity_id = entity_id_res.unwrap();
+        let entity_id = this.entity_repo.spawn(name, zone_id, max_stats);
 
-        let res = move_entity_to_zone(entity_id, zone_id, this.zone_repo, this.entity_repo);
-        if (res.is_err()) return err(res.error);
-        return ok(entity_id);
+        move_entity_to_zone(entity_id, zone_id, this.zone_repo, this.entity_repo);
+        return entity_id;
     }
 
     spawn_zone(name: string, kind: ZoneKind): ZoneId {
@@ -71,11 +67,20 @@ export class World {
 
     // other
     // ======
-    update() {
+    update(delta_ms: number) {
         console.log("Update");
+        this.zone_repo.all().forEach(zone => {
+            if (zone.kind === "building") {
+                zone.tick(delta_ms);
+            }
+        });
     }
 
-    move_entity_to_zone(entity_id: EntityId, zone_id: ZoneId): Result<void, string> {
+    debug_manually_advance_time(ms: number) {
+        this.update(ms);
+    }
+
+    move_entity_to_zone(entity_id: EntityId, zone_id: ZoneId): void {
         return move_entity_to_zone(entity_id, zone_id, this.zone_repo, this.entity_repo);
     }
 

@@ -12,6 +12,9 @@ export abstract class Opt<T> {
     /** map over value if Some */
     abstract map<U>(fn: (v: T) => U): Opt<U>;
 
+    /** unwrap or throw a custom error message if None */
+    abstract expect(msg: string): T;
+
     // helpers
     /** usefull to get an error if is none */
     ok_or<E = string>(error: E): Result<T, E> {
@@ -28,6 +31,7 @@ export class Some<T> extends Opt<T> {
     unwrap_or(_: T): T { return this.value; }
     unwrap_or_null(): T | null { return this.value; }
     map<U>(fn: (v: T) => U): Opt<U> { return new Some(fn(this.value)); }
+    expect(msg: string): T { return this.value; }
 }
 
 export class None<T = never> extends Opt<T> {
@@ -39,6 +43,7 @@ export class None<T = never> extends Opt<T> {
     unwrap_or(fallback: T) { return fallback; }
     unwrap_or_null(): T | null { return null; }
     map<U>(_: (v: T) => U): Opt<U> { return new None(); }
+    expect(msg: string): T { throw new Error(msg); }
 }
 
 export const some = <T>(value: T): Opt<T> => new Some(value);

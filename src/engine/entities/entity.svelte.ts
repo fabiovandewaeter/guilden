@@ -1,5 +1,5 @@
 // engine/entities/types.svelte.ts
-import type { ZoneId } from "../map/zone.svelte";
+import type { ZoneId } from "../zones/zone.svelte";
 import { type Opt } from "../utils/option"
 
 export type EntityId = number

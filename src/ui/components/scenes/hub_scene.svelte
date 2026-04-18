@@ -1,6 +1,6 @@
 <!-- ui/components/scene/hub_scene.svelte -->
 <script lang="ts">
-    import type { ZoneId } from "../../../engine/map/zone.svelte";
+    import type { ZoneId } from "../../../engine/zones/zone.svelte";
     import { scenes, world } from "../../lib/world_controller";
 
     interface Props {

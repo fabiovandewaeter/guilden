@@ -1,6 +1,6 @@
 // src/ui/scene_manager.ts
 import type { EntityId } from "../../engine/entities/entity.svelte";
-import type { ZoneId } from "../../engine/map/zone.svelte";
+import type { ZoneId } from "../../engine/zones/zone.svelte";
 import { none, Opt, some } from "../../engine/utils/option";
 import type { Scene } from "./scene";
 
