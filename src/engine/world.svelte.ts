@@ -2,49 +2,55 @@
 import { EntityRepository } from "./entities/entity_repository.svelte";
 import type { Entity, EntityId, Stats } from "./entities/entity.svelte";
 import type { GameState } from "./game_state";
-import { Opt, none, some } from "./utils/option";
-import { Result, err, ok } from "./utils/result";
-import type { Zone, ZoneId, ZoneKind } from "./zones/zone.svelte";
-import { ZoneRepository } from "./zones/zone_repository.svelte";
-import { move_entity_to_zone, connect_zones } from "./zones/zone_service";
+import { Opt, some } from "./utils/option";
+import { BuildingRepository } from "./places/building_repository.svelte";
+import { RoomRepository } from "./places/room_repository.svelte";
+import type { PlaceRef } from "./places/place_ref.svelte";
+import { HubRepository } from "./places/hub_repository.svelte";
 
 export class World {
     private _state: GameState = $state({ mode: "hub" });
-    private current_zone_id: Opt<ZoneId> = $state(none);
     readonly entity_repo: EntityRepository = new EntityRepository();
-    readonly zone_repo: ZoneRepository = new ZoneRepository();
+    readonly hub_repo: HubRepository = new HubRepository();
+    readonly building_repo: BuildingRepository = new BuildingRepository();
+    readonly room_repo: RoomRepository = new RoomRepository();
 
     constructor() { }
 
     get state() { return this._state; }
-    get current_zone(): Opt<Zone> {
-        return this.current_zone_id.is_some()
-            ? this.get_zone(this.current_zone_id.value)
-            : none;
-    }
-
     set state(state: GameState) { this._state = state; }
 
     // spawners
     // ========
-    /** spawn entity AND move it to the zone but fail if assignated zone doesn't exist */
-    spawn_entity(name: string, zone_id: ZoneId, max_stats: Stats): EntityId {
-        this.zone_repo.get_or_err(zone_id).expect(`Cannot spawn entity: Zone ${zone_id} is missing`);
+    /** spawn entity AND move it to the place but fail if assignated place doesn't exist */
+    spawn_entity(name: string, place: PlaceRef, max_stats: Stats): EntityId {
+        this.place_repo.get_or_err(place).expect(`Cannot spawn entity: Place ${place_id} is missing`);
 
-        let entity_id = this.entity_repo.spawn(name, zone_id, max_stats);
+        let entity_id = this.entity_repo.spawn(name, place_id, max_stats);
 
-        move_entity_to_zone(entity_id, zone_id, this.zone_repo, this.entity_repo);
+        move_entity_to_place(entity_id, place_id, this.place_repo, this.entity_repo);
         return entity_id;
     }
 
-    spawn_zone(name: string, kind: ZoneKind): ZoneId {
-        return this.zone_repo.spawn(name, kind);
+    spawn_place(name: string, kind: PlaceKind): PlaceId {
+        return this.place_repo.spawn(name, kind);
+    }
+
+    // buildings
+    spawn_forge(name: string): PlaceId {
+        const building_id = this.building_repo.spawn_forge();
+        return this.spawn_place(name, { id: "building", building_id });
+    }
+
+    spawn_room(name: string): PlaceId {
+        const room_id = this.room_repo.spawn();
+        return this.spawn_place(name, { id: "room", room_id });
     }
 
     // setters
     // =======
-    set_current_zone_id(zone_id: ZoneId) {
-        this.current_zone_id = some(zone_id);
+    set_current_place_id(place_id: PlaceId) {
+        this.current_place_id = some(place_id);
     }
 
     // deleters
@@ -52,27 +58,20 @@ export class World {
 
     // getters
     // ======= 
-    get_entity(id: EntityId): Opt<Entity> {
-        return this.entity_repo.get(id);
-    }
-    get_entities(): Entity[] {
-        return this.entity_repo.all();
-    }
-    get_zone(id: ZoneId): Opt<Zone> {
-        return this.zone_repo.get(id);
-    }
-    get_zones(): Zone[] {
-        return this.zone_repo.all();
-    }
+    get_entity(id: EntityId): Opt<Entity> { return this.entity_repo.get(id); }
+    get_entities(): Entity[] { return this.entity_repo.all(); }
+    get_place(id: PlaceId): Opt<Place> { return this.place_repo.get(id); }
+    get_places(): Place[] { return this.place_repo.all(); }
 
     // other
     // ======
     update(delta_ms: number) {
         console.log("Update");
-        this.zone_repo.all().forEach(zone => {
-            if (zone.kind === "building") {
-                zone.tick(delta_ms);
-            }
+        // this.building_repo.all().forEach(building => {
+        //     building.tick(delta_ms);
+        // });
+        this.place_repo.all_rooms().forEach(room => {
+            room.tick(delta_ms);
         });
     }
 
@@ -80,12 +79,12 @@ export class World {
         this.update(ms);
     }
 
-    move_entity_to_zone(entity_id: EntityId, zone_id: ZoneId): void {
-        return move_entity_to_zone(entity_id, zone_id, this.zone_repo, this.entity_repo);
+    move_entity_to_place(entity_id: EntityId, place_id: PlaceId): void {
+        return move_entity_to_place(entity_id, place_id, this.place_repo, this.entity_repo);
     }
 
-    connect_zones(zone_a_id: ZoneId, zone_b_id: ZoneId) {
-        return connect_zones(zone_a_id, zone_b_id, this.zone_repo);
+    connect_places(place_a_id: PlaceId, place_b_id: PlaceId) {
+        return connect_places(place_a_id, place_b_id, this.place_repo);
     }
 
     // interactions

@@ -1,10 +1,10 @@
 // src/ui/scene_manager.ts
 import type { EntityId } from "../../engine/entities/entity.svelte";
-import type { ZoneId } from "../../engine/zones/zone.svelte";
+import type { PlaceId } from "../../engine/places/place.svelte";
 import { none, Opt, some } from "../../engine/utils/option";
 import type { Scene } from "./scene";
 
-export const DEFAULT_SCENE: Scene = { id: "hub", zone_id: 0, from: none };
+export const DEFAULT_SCENE: Scene = { id: "hub", place_id: 0, from: none };
 
 export class SceneManager {
     current: Scene = $state(DEFAULT_SCENE);
@@ -13,12 +13,12 @@ export class SceneManager {
         this.current = scene;
     }
 
-    enter_building(zone_id: ZoneId) {
-        this.navigate({ id: "building", zone_id, from: some(this.current) });
+    enter_building(place_id: PlaceId) {
+        this.navigate({ id: "building", place_id, from: some(this.current) });
     }
 
-    enter_room(zone_id: ZoneId) {
-        this.navigate({ id: "room", zone_id, from: some(this.current) });
+    enter_room(place_id: PlaceId) {
+        this.navigate({ id: "room", place_id, from: some(this.current) });
     }
 
     inspect_entity(entity_id: EntityId) {

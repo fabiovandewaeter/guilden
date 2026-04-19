@@ -1,18 +1,18 @@
 <!-- ui/components/scene/building_scene.svelte -->
 <script lang="ts">
-    import type { ZoneId } from "../../../engine/zones/zone.svelte";
+    import type { PlaceId } from "../../../engine/places/place.svelte";
     import { scenes, world } from "../../lib/world_controller";
 
     interface Props {
-        zone_id: ZoneId;
+        place_id: PlaceId;
     }
 
-    let { zone_id }: Props = $props();
+    let { place_id }: Props = $props();
 
-    let building = $derived(world.get_zone(zone_id).unwrap());
+    let building = $derived(world.get_place(place_id).unwrap());
     let rooms = $derived(
-        building.connected_zones
-            .map((id) => world.get_zone(id).unwrap())
+        building.connected_places
+            .map((id) => world.get_place(id).unwrap())
             .filter((z) => z.kind === "room"),
     );
     let npcs = $derived(

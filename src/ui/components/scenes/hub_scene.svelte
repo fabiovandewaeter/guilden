@@ -1,26 +1,26 @@
 <!-- ui/components/scene/hub_scene.svelte -->
 <script lang="ts">
-    import type { ZoneId } from "../../../engine/zones/zone.svelte";
+    import type { PlaceId } from "../../../engine/places/place.svelte";
     import { scenes, world } from "../../lib/world_controller";
 
     interface Props {
-        zone_id: ZoneId;
+        place_id: PlaceId;
     }
 
-    let { zone_id }: Props = $props();
+    let { place_id }: Props = $props();
 
-    let zone = $derived(world.get_zone(zone_id).unwrap());
+    let place = $derived(world.get_place(place_id).unwrap());
     let buildings = $derived(
-        zone.connected_zones
-            .map((id) => world.get_zone(id).unwrap())
+        place.connected_places
+            .map((id) => world.get_place(id).unwrap())
             .filter((z) => z.kind === "building"),
     );
     let npcs = $derived(
-        zone.entities.map((id) => world.get_entity(id).unwrap()),
+        place.entities.map((id) => world.get_entity(id).unwrap()),
     );
 </script>
 
-<h2>{zone.name}</h2>
+<h2>{place.name}</h2>
 
 <section>
     <h3>Buildings</h3>

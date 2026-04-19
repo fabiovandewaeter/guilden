@@ -6,7 +6,7 @@ export abstract class Result<T, E = string> {
     abstract unwrap_or(fallback: T): T;
     abstract map<U>(fn: (val: T) => U): Result<U, E>;
 
-    abstract expect(msg: string): T;
+    abstract expect(msg?: string): T;
     abstract assert_ok(): void;
 }
 
@@ -19,7 +19,7 @@ export class Ok<T, E = string> extends Result<T, E> {
     unwrap_or(_: T): T { return this.value }
     map<U>(fn: (val: T) => U): Result<U, E> { return new Ok(fn(this.value)); }
 
-    expect(msg: string): T { return this.value; }
+    expect(_: string = ""): T { return this.value; }
     assert_ok(): void { /* Ne fait rien, tout va bien */ }
 }
 
@@ -32,7 +32,12 @@ export class Err<T = never, E = string> extends Result<T, E> {
     unwrap_or(fallback: T): T { return fallback; }
     map<U>(_: (val: T) => U): Result<U, E> { return new Err(this.error); }
 
-    expect(msg: string): T { throw new Error(`${msg}: ${String(this.error)}`); }
+    expect(msg?: string): T {
+        if (msg) {
+            throw new Error(`${msg}: ${String(this.error)}`);
+        }
+        throw new Error(String(this.error));
+    }
     assert_ok(): void { throw new Error(String(this.error)); }
 }
 

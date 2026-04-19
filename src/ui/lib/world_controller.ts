@@ -8,20 +8,18 @@ const world = new World();
 const scenes = new SceneManager();
 const clock = new Clock();
 
-// ==== zones ==== 
+// ==== places ==== 
 // hub
-const hub_id = world.spawn_zone("Hub", "hub");
+const hub_id = world.spawn_place("Hub", { id: "hub" });
 // buildings
-const tavern_id = world.spawn_zone("Tavern", "building")
-const forge_id = world.spawn_zone("Forge", "building")
+const forge_id = world.spawn_forge("Forge")
 
-world.connect_zones(hub_id, tavern_id);
-world.connect_zones(hub_id, forge_id);
+world.connect_places(hub_id, forge_id);
 
 // rooms
-const room_a_id = world.spawn_zone("room_a", "room")
+const room_a_id = world.spawn_room("room_a")
 
-world.connect_zones(tavern_id, room_a_id);
+world.connect_places(forge_id, room_a_id);
 // =============== 
 
 // entities

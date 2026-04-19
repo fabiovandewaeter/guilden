@@ -1,5 +1,5 @@
 // engine/entities/types.svelte.ts
-import type { ZoneId } from "../zones/zone.svelte";
+import type { PlaceRef } from "../places/place_ref.svelte";
 import { type Opt } from "../utils/option"
 
 export type EntityId = number
@@ -7,13 +7,15 @@ export type EntityId = number
 export class Entity {
     readonly id: EntityId;
     name: string = $state()!;
-    zone_id: Opt<ZoneId> = $state()!;
+    // place_id: Opt<PlaceId> = $state()!;
+    place: Opt<PlaceRef> = $state()!;
     max_stats: Stats;
+    place_id: any;
 
-    constructor(id: EntityId, name: string, zone_id: Opt<ZoneId>, max_stats: Stats) {
+    constructor(id: EntityId, name: string, place: Opt<PlaceRef>, max_stats: Stats) {
         this.id = id;
         this.name = name;
-        this.zone_id = zone_id;
+        this.place = place;
         this.max_stats = max_stats;
     }
 }
