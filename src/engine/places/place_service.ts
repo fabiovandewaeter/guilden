@@ -1,7 +1,7 @@
 // engine/places/place.ts
 import type { EntityId } from "../entities/entity.svelte";
 import type { EntityRepository } from "../entities/entity_repository.svelte";
-import { some } from "../utils/option";
+import { none, some } from "../utils/option";
 import type { World } from "../world.svelte";
 import type { BuildingId } from "./building.svelte";
 import type { BuildingRepository } from "./building_repository.svelte";
@@ -59,7 +59,7 @@ export function spawn_forge(name: string, building_repo: BuildingRepository, roo
     const room = room_repo.get(room_id).unwrap();
 
     building.add_room(room_id).assert_ok();
-    room.production = some(new ProductionComponent());
+    room.production = none;
 
     return { building_id, room_id };
 }

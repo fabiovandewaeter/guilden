@@ -3,7 +3,7 @@ import { GenericRepository } from "../generic_repository.svelte";
 import { type InstancedItemId, InstancedItem } from "./instanced_item.svelte";
 import type { ItemArchetype } from "./item_archetype";
 import type { ItemKind } from "./item_kind";
-import type { Quality } from "../quality.svelte";
+import type { Quality } from "./quality.svelte";
 
 export class InstancedItemRepository extends GenericRepository<InstancedItemId, InstancedItem> {
     spawn(name: string, kind: ItemKind, quality: Quality, level: number): InstancedItemId {

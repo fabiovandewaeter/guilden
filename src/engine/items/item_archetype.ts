@@ -1,7 +1,7 @@
 // engine/items/item_archetype.ts
 
 import type { ItemKind } from "./item_kind";
-import type { Quality } from "../quality.svelte";
+import type { Quality } from "./quality.svelte";
 
 export type ItemArchetype = {
     kind: ItemKind,

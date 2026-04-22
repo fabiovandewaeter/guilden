@@ -1,8 +1,11 @@
 // ui/states/world_controller.ts
 import { Clock } from "../../engine/clock";
+import { RECIPES, type RecipeOutput } from "../../engine/items/recipe";
+import { ProductionComponent } from "../../engine/places/production_component.svelte";
+import { some } from "../../engine/utils/option";
 import { World } from "../../engine/world.svelte";
 import { load_timestamp, save_timestamp } from "./save";
-import { DEFAULT_SCENE, SceneManager } from "./scene_manager.svelte";
+import { SceneManager } from "./scene_manager.svelte";
 
 const world = new World();
 const scenes = new SceneManager();
@@ -16,6 +19,13 @@ const hub_id = world.spawn_hub("Hub");
 // buildings
 const { building_id: forge_id, room_id: forge_room_id } = world.spawn_forge("Forge")
 world.hub_repo.get(hub_id).expect(`Can connect forge to hub: Hub ${hub_id} not found`).add_building(forge_id).assert_ok();
+const forge_room = world.get_room(forge_room_id).unwrap();
+forge_room.production = some(new ProductionComponent(RECIPES.iron_ingot));
+forge_room.production.unwrap().input.add_stackable({
+    kind: "iron_ore",
+    quality: "Broken",
+    level: 0
+}, 2000);
 
 // rooms
 const room_a_id = world.spawn_room("Room A")

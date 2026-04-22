@@ -4,13 +4,17 @@ import { consume_stackable_items_from_inventory, type CraftingRequirement } from
 import type { InstancedItemRepository } from "../items/instanced_item_repository.svelte";
 import { archetype_matches_requirement } from "../items/item_service";
 import type { Recipe } from "../items/recipe";
-import { Opt, none } from "../utils/option";
+import { Opt, none, some } from "../utils/option";
 
 export class ProductionComponent {
     recipe: Opt<Recipe> = $state(none);
     readonly input: Inventory = new Inventory();
     readonly output: Inventory = new Inventory();
     public leftover_ms: number = $state(0);
+
+    constructor(recipe: Recipe) {
+        this.recipe = some(recipe);
+    }
 
     /** it is running if we have enough materials in the input inventory */
     get is_running(): boolean {

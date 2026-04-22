@@ -1,7 +1,7 @@
 // engine/items/item.svelte.ts
 import type { ItemArchetype } from "./item_archetype";
 import type { ItemKind } from "./item_kind";
-import type { Quality } from "../quality.svelte";
+import type { Quality } from "./quality.svelte";
 
 export type InstancedItemId = number & { readonly __type: unique symbol };
 // export type ItemStack = { item_id: ItemId, amount: number };
