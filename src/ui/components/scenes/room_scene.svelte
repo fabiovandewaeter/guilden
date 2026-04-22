@@ -2,7 +2,6 @@
 <script lang="ts">
     import type { RoomId } from "../../../engine/places/room.svelte";
     import { scenes, world } from "../../lib/world_controller";
-    import Inventory from "../inventory.svelte";
     import ProductionView from "../production_view.svelte";
 
     interface Props {
