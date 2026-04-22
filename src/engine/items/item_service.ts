@@ -1,20 +1,22 @@
 // engine/items/item_service.ts
 
 import type { CraftingRequirement } from "./crafting_service";
-import type { ItemId } from "./item.svelte";
-import type { ItemRepository } from "./item_repository.svelte";
+import type { ItemArchetype } from "./item_archetype";
 
-export function matches_requirement(item_id: ItemId, requirement: CraftingRequirement, item_repository: ItemRepository): boolean {
-    const item = item_repository.get_or_err(item_id).expect();
+export function archetype_matches_requirement(archetype: ItemArchetype, requirement: CraftingRequirement): boolean {
 
-    if (requirement.minLevel !== undefined && item.level < requirement.minLevel) {
-        return false;
-    }
-    if (requirement.maxLevel !== undefined && item.level > requirement.maxLevel) {
+    if (requirement.kind !== undefined && archetype.kind !== requirement.kind) {
         return false;
     }
 
-    if (requirement.qualities && !requirement.qualities.includes(item.quality)) {
+    if (requirement.minLevel !== undefined && archetype.level < requirement.minLevel) {
+        return false;
+    }
+    if (requirement.maxLevel !== undefined && archetype.level > requirement.maxLevel) {
+        return false;
+    }
+
+    if (requirement.qualities && !requirement.qualities.includes(archetype.quality)) {
         return false;
     }
 

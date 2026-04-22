@@ -1,0 +1,1 @@
+<!-- ui/components/inventory.svelte -->

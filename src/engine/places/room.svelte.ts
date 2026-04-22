@@ -1,7 +1,7 @@
 // engine/places/room.svelte.ts
 
 import type { EntityId } from "../entities/entity.svelte";
-import type { ItemRepository } from "../items/item_repository.svelte";
+import type { InstancedItemRepository } from "../items/instanced_item_repository.svelte";
 import { Opt, none } from "../utils/option";
 import { err, ok, type Result } from "../utils/result";
 import type { ProductionComponent } from "./production_component.svelte";
@@ -21,9 +21,9 @@ export class Room {
         this.name = name;
     }
 
-    tick(delta_ms: number, item_repo: ItemRepository) {
+    tick(delta_ms: number, instanced_item_repo: InstancedItemRepository) {
         if (this.production.is_some()) {
-            this.production.value.tick(delta_ms, item_repo);
+            this.production.value.tick(delta_ms, instanced_item_repo);
         }
     }
 

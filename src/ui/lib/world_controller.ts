@@ -8,7 +8,9 @@ const world = new World();
 const scenes = new SceneManager();
 const clock = new Clock();
 
-// === places =====================================================================
+// ==========================================
+// PLACES
+// ==========================================
 // hub
 const hub_id = world.spawn_hub("Hub");
 // buildings
@@ -19,7 +21,9 @@ world.hub_repo.get(hub_id).expect(`Can connect forge to hub: Hub ${hub_id} not f
 const room_a_id = world.spawn_room("Room A")
 world.connect_rooms(forge_room_id, room_a_id);
 
-// === entities ===================================================================
+// ==========================================
+// ENTITIES
+// ==========================================
 const npc_id = world.spawn_entity(
     "Forgeron",
     { tag: "room", id: forge_room_id },

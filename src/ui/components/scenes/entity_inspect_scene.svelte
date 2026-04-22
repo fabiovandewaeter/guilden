@@ -12,6 +12,6 @@
     let entity = $derived(world.get_entity(entity_id).unwrap());
 </script>
 
-<button onclick={() => scenes.leave_current_scene()}>Return</button>
+<button onclick={() => scenes.back()}>Return</button>
 <h2>{entity.name}</h2>
 <p>HP : {entity.max_stats.hp}</p>

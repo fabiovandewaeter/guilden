@@ -48,7 +48,9 @@ export function connect_hubs(a_id: HubId, b_id: HubId, world: World): void {
     b.add_connected_hub(a_id).assert_ok();
 }
 
-// === spawners ===================================================================
+// ==========================================
+// SPAWNERS
+// ==========================================
 export function spawn_forge(name: string, building_repo: BuildingRepository, room_repo: RoomRepository): { building_id: BuildingId, room_id: RoomId } {
     const building_id = building_repo.spawn(name);
     const room_id = room_repo.spawn(`${name} - production room`);

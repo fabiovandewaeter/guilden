@@ -2,6 +2,8 @@
 <script lang="ts">
     import type { RoomId } from "../../../engine/places/room.svelte";
     import { scenes, world } from "../../lib/world_controller";
+    import Inventory from "../inventory.svelte";
+    import ProductionView from "../production_view.svelte";
 
     interface Props {
         room_id: RoomId;
@@ -20,6 +22,11 @@
 
 <button onclick={() => scenes.back()}>Return</button>
 <h2>{room.name}</h2>
+
+{#if room.production.is_some()}
+    <h3>Production component</h3>
+    <ProductionView production={room.production.value} />
+{/if}
 
 <h3>Connected Rooms</h3>
 {#each connected_rooms as r}

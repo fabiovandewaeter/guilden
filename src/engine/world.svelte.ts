@@ -11,8 +11,7 @@ import type { Hub, HubId } from "./places/hub.svelte";
 import type { Building, BuildingId } from "./places/building.svelte";
 import type { Room, RoomId } from "./places/room.svelte";
 import { connect_hubs, connect_rooms, move_entity, spawn_forge } from "./places/place_service";
-import { ItemRepository } from "./items/item_repository.svelte";
-import { ProductionComponent } from "./places/production_component.svelte";
+import { InstancedItemRepository } from "./items/instanced_item_repository.svelte";
 
 export class World {
     private _state: GameState = $state({ mode: "hub" });
@@ -22,14 +21,16 @@ export class World {
     readonly building_repo: BuildingRepository = new BuildingRepository();
     readonly room_repo: RoomRepository = new RoomRepository();
 
-    readonly item_repo: ItemRepository = new ItemRepository();
+    readonly instanced_item_repo: InstancedItemRepository = new InstancedItemRepository();
 
     constructor() { }
 
     get state() { return this._state; }
     set state(state: GameState) { this._state = state; }
 
-    // === spawners ===================================================================
+    // ==========================================
+    // SPAWNERS
+    // ==========================================
     /** spawn entity AND move it to the place but fail if assignated place doesn't exist */
     spawn_entity(name: string, place: PlaceRef, max_stats: Stats): EntityId {
         this._resolve_place(place).expect(`Cannot spawn entity: place ${JSON.stringify(place)} not found`);
@@ -48,11 +49,10 @@ export class World {
 
     spawn_room(name: string): RoomId { return this.room_repo.spawn(name); }
 
-    // === setters ====================================================================
 
-    // === deleters ===================================================================
-
-    // === getters ====================================================================
+    // ==========================================
+    // GETTERS
+    // ==========================================
     get_entity(id: EntityId): Opt<Entity> { return this.entity_repo.get(id); }
     get_entities(): Entity[] { return this.entity_repo.all(); }
     get_hub(id: HubId): Opt<Hub> { return this.hub_repo.get(id); }
@@ -63,11 +63,13 @@ export class World {
     get_buildings(): Building[] { return this.building_repo.all(); }
     get_rooms(): Room[] { return this.room_repo.all(); }
 
-    // === other ======================================================================
+    // ==========================================
+    // OTHER
+    // ==========================================
     update(delta_ms: number) {
         console.log("Update " + delta_ms / 1000 + " s");
         this.get_rooms().forEach(room => {
-            room.tick(delta_ms, this.item_repo);
+            room.tick(delta_ms, this.instanced_item_repo);
         });
     }
 
@@ -78,7 +80,9 @@ export class World {
     connect_hubs(a: HubId, b: HubId) { return connect_hubs(a, b, this); }
     connect_rooms(a: RoomId, b: RoomId) { return connect_rooms(a, b, this); }
 
-    // === private ====================================================================
+    // ==========================================
+    // PRIVATE
+    // ==========================================
     /** reads the PlaceRef and returns the corresponding Hub or Room */
     private _resolve_place(ref: PlaceRef): Opt<Hub | Room> {
         if (ref.tag === 'room') return this.room_repo.get(ref.id);
