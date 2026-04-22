@@ -1,41 +1,45 @@
 <!-- ui/components/scene/hub_scene.svelte -->
 <script lang="ts">
-    import type { PlaceId } from "../../../engine/places/place.svelte";
+    import type { HubId } from "../../../engine/places/hub.svelte";
     import { scenes, world } from "../../lib/world_controller";
 
     interface Props {
-        place_id: PlaceId;
+        hub_id: HubId;
     }
 
-    let { place_id }: Props = $props();
+    let { hub_id }: Props = $props();
 
-    let place = $derived(world.get_place(place_id).unwrap());
+    let hub = $derived(world.get_hub(hub_id).unwrap());
     let buildings = $derived(
-        place.connected_places
-            .map((id) => world.get_place(id).unwrap())
-            .filter((z) => z.kind === "building"),
+        hub.buildings.map((id) => world.get_building(id).unwrap()),
+    );
+    let connected_hubs = $derived(
+        hub.connected_hubs.map((id) => world.get_hub(id).unwrap()),
     );
     let npcs = $derived(
-        place.entities.map((id) => world.get_entity(id).unwrap()),
+        hub.entities.map((id) => world.get_entity(id).unwrap()),
     );
 </script>
 
-<h2>{place.name}</h2>
+<h2>{hub.name}</h2>
 
-<section>
-    <h3>Buildings</h3>
-    {#each buildings as building}
-        <button onclick={() => scenes.enter_building(building.id)}>
-            {building.name}
-        </button>
-    {/each}
-</section>
+<h3>Connected hubs</h3>
+{#each connected_hubs as h}
+    <button onclick={() => scenes.enter_hub(h.id)}>
+        {h.name}
+    </button>
+{/each}
 
-<section>
-    <h3>NPCs</h3>
-    {#each npcs as npc}
-        <button onclick={() => scenes.inspect_entity(npc.id)}>
-            {npc.name}
-        </button>
-    {/each}
-</section>
+<h3>Buildings</h3>
+{#each buildings as b}
+    <button onclick={() => scenes.enter_building(b.id)}>
+        {b.name}
+    </button>
+{/each}
+
+<h3>NPCs</h3>
+{#each npcs as npc}
+    <button onclick={() => scenes.inspect_entity(npc.id)}>
+        {npc.name}
+    </button>
+{/each}

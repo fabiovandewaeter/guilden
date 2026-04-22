@@ -3,7 +3,7 @@ import type { EntityId } from "../entities/entity.svelte";
 import { err, ok, type Result } from "../utils/result";
 import type { BuildingId } from "./building.svelte";
 
-export type HubId = number;
+export type HubId = number & { readonly __type: unique symbol };
 
 // hub, plain, road ...
 export class Hub {
@@ -36,12 +36,12 @@ export class Hub {
         return ok(undefined);
     }
 
-    add_building(building_id: HubId): Result<void, string> {
+    add_building(building_id: BuildingId): Result<void, string> {
         if (this.buildings.includes(building_id)) return err(`${building_id} already is a buildings of hub ${this.id}`);
         this.buildings.push(building_id);
         return ok(undefined);
     }
-    remove_building(building_id: HubId): Result<void, string> {
+    remove_building(building_id: BuildingId): Result<void, string> {
         const index = this.buildings.indexOf(building_id);
         if (index !== -1) {
             this.buildings.splice(index, 1);

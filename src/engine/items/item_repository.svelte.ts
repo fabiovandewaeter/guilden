@@ -5,7 +5,7 @@ import type { Quality } from "./quality.svelte";
 
 export class ItemRepository extends GenericRepository<ItemId, Item> {
     spawn(name: string, kind: ItemKind, quality: Quality, level: number): ItemId {
-        const id: ItemId = this.next_id++;
+        const id: ItemId = this.next_id() as ItemId;
         const entity: Item = new Item(id, name, kind, quality, level);
 
         this.elements[id] = entity;

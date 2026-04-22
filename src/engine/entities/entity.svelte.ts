@@ -2,7 +2,7 @@
 import type { PlaceRef } from "../places/place_ref.svelte";
 import { type Opt } from "../utils/option"
 
-export type EntityId = number
+export type EntityId = number & { readonly __type: unique symbol };
 
 export class Entity {
     readonly id: EntityId;

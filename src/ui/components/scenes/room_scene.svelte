@@ -1,42 +1,36 @@
 <!-- ui/components/scene/room_scene.svelte -->
 <script lang="ts">
-    import type { PlaceId } from "../../../engine/places/place.svelte";
+    import type { RoomId } from "../../../engine/places/room.svelte";
     import { scenes, world } from "../../lib/world_controller";
 
     interface Props {
-        place_id: PlaceId;
+        room_id: RoomId;
     }
 
-    let { place_id }: Props = $props();
+    let { room_id }: Props = $props();
 
-    let building = $derived(world.get_place(place_id).unwrap());
-    let rooms = $derived(
-        building.connected_places
-            .map((id) => world.get_place(id).unwrap())
-            .filter((z) => z.kind === "room"),
+    let room = $derived(world.get_room(room_id).unwrap());
+    let connected_rooms = $derived(
+        room.connected_rooms.map((id) => world.get_room(id).unwrap()),
     );
     let npcs = $derived(
-        building.entities.map((id) => world.get_entity(id).unwrap()),
+        room.entities.map((id) => world.get_entity(id).unwrap()),
     );
 </script>
 
-<button onclick={() => scenes.leave_current_scene()}>Return</button>
-<h2>{building.name}</h2>
+<button onclick={() => scenes.back()}>Return</button>
+<h2>{room.name}</h2>
 
-<section>
-    <h3>Rooms</h3>
-    {#each rooms as room}
-        <button onclick={() => scenes.enter_room(room.id)}>
-            {room.name}
-        </button>
-    {/each}
-</section>
+<h3>Connected Rooms</h3>
+{#each connected_rooms as r}
+    <button onclick={() => scenes.enter_room(r.id)}>
+        {r.name}
+    </button>
+{/each}
 
-<section>
-    <h3>NPCs</h3>
-    {#each npcs as npc}
-        <button onclick={() => scenes.inspect_entity(npc.id)}>
-            {npc.name}
-        </button>
-    {/each}
-</section>
+<h3>NPCs</h3>
+{#each npcs as npc}
+    <button onclick={() => scenes.inspect_entity(npc.id)}>
+        {npc.name}
+    </button>
+{/each}

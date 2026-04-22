@@ -7,88 +7,81 @@ import { BuildingRepository } from "./places/building_repository.svelte";
 import { RoomRepository } from "./places/room_repository.svelte";
 import type { PlaceRef } from "./places/place_ref.svelte";
 import { HubRepository } from "./places/hub_repository.svelte";
+import type { Hub, HubId } from "./places/hub.svelte";
+import type { Building, BuildingId } from "./places/building.svelte";
+import type { Room, RoomId } from "./places/room.svelte";
+import { connect_hubs, connect_rooms, move_entity, spawn_forge } from "./places/place_service";
+import { ItemRepository } from "./items/item_repository.svelte";
+import { ProductionComponent } from "./places/production_component.svelte";
 
 export class World {
     private _state: GameState = $state({ mode: "hub" });
+
     readonly entity_repo: EntityRepository = new EntityRepository();
     readonly hub_repo: HubRepository = new HubRepository();
     readonly building_repo: BuildingRepository = new BuildingRepository();
     readonly room_repo: RoomRepository = new RoomRepository();
+
+    readonly item_repo: ItemRepository = new ItemRepository();
 
     constructor() { }
 
     get state() { return this._state; }
     set state(state: GameState) { this._state = state; }
 
-    // spawners
-    // ========
+    // === spawners ===================================================================
     /** spawn entity AND move it to the place but fail if assignated place doesn't exist */
     spawn_entity(name: string, place: PlaceRef, max_stats: Stats): EntityId {
-        this.place_repo.get_or_err(place).expect(`Cannot spawn entity: Place ${place_id} is missing`);
-
-        let entity_id = this.entity_repo.spawn(name, place_id, max_stats);
-
-        move_entity_to_place(entity_id, place_id, this.place_repo, this.entity_repo);
+        this._resolve_place(place).expect(`Cannot spawn entity: place ${JSON.stringify(place)} not found`);
+        let entity_id = this.entity_repo.spawn(name, place, max_stats);
+        // move_entity(entity_id, place_id, this.place_repo, this.entity_repo);
         return entity_id;
     }
 
-    spawn_place(name: string, kind: PlaceKind): PlaceId {
-        return this.place_repo.spawn(name, kind);
+    spawn_hub(name: string): HubId { return this.hub_repo.spawn(name); }
+
+    spawn_building(name: string): BuildingId { return this.building_repo.spawn(name); }
+    /** a building with a production room */
+    spawn_forge(name: string): { building_id: BuildingId, room_id: RoomId } {
+        return spawn_forge(name, this.building_repo, this.room_repo);
     }
 
-    // buildings
-    spawn_forge(name: string): PlaceId {
-        const building_id = this.building_repo.spawn_forge();
-        return this.spawn_place(name, { id: "building", building_id });
-    }
+    spawn_room(name: string): RoomId { return this.room_repo.spawn(name); }
 
-    spawn_room(name: string): PlaceId {
-        const room_id = this.room_repo.spawn();
-        return this.spawn_place(name, { id: "room", room_id });
-    }
+    // === setters ====================================================================
 
-    // setters
-    // =======
-    set_current_place_id(place_id: PlaceId) {
-        this.current_place_id = some(place_id);
-    }
+    // === deleters ===================================================================
 
-    // deleters
-    // ========
-
-    // getters
-    // ======= 
+    // === getters ====================================================================
     get_entity(id: EntityId): Opt<Entity> { return this.entity_repo.get(id); }
     get_entities(): Entity[] { return this.entity_repo.all(); }
-    get_place(id: PlaceId): Opt<Place> { return this.place_repo.get(id); }
-    get_places(): Place[] { return this.place_repo.all(); }
+    get_hub(id: HubId): Opt<Hub> { return this.hub_repo.get(id); }
+    get_building(id: BuildingId): Opt<Building> { return this.building_repo.get(id); }
+    get_room(id: RoomId): Opt<Room> { return this.room_repo.get(id); }
 
-    // other
-    // ======
+    get_hubs(): Hub[] { return this.hub_repo.all(); }
+    get_buildings(): Building[] { return this.building_repo.all(); }
+    get_rooms(): Room[] { return this.room_repo.all(); }
+
+    // === other ======================================================================
     update(delta_ms: number) {
-        console.log("Update");
-        // this.building_repo.all().forEach(building => {
-        //     building.tick(delta_ms);
-        // });
-        this.place_repo.all_rooms().forEach(room => {
-            room.tick(delta_ms);
+        console.log("Update " + delta_ms / 1000 + " s");
+        this.get_rooms().forEach(room => {
+            room.tick(delta_ms, this.item_repo);
         });
     }
 
-    debug_manually_advance_time(ms: number) {
-        this.update(ms);
-    }
+    debug_manually_advance_time(ms: number) { this.update(ms); }
 
-    move_entity_to_place(entity_id: EntityId, place_id: PlaceId): void {
-        return move_entity_to_place(entity_id, place_id, this.place_repo, this.entity_repo);
-    }
+    move_entity(entity_id: EntityId, place_ref: PlaceRef): void { return move_entity(entity_id, place_ref, this, this.entity_repo); }
 
-    connect_places(place_a_id: PlaceId, place_b_id: PlaceId) {
-        return connect_places(place_a_id, place_b_id, this.place_repo);
-    }
+    connect_hubs(a: HubId, b: HubId) { return connect_hubs(a, b, this); }
+    connect_rooms(a: RoomId, b: RoomId) { return connect_rooms(a, b, this); }
 
-    // interactions
-    // ============
-    // start_dialogue(source_id: EntityId, target_id: EntityId): void { return start_dialogue(this, source_id, target_id); }
-    // start_trade(source_id: EntityId, target_id: EntityId): void { return start_trade(this, source_id, target_id); }
+    // === private ====================================================================
+    /** reads the PlaceRef and returns the corresponding Hub or Room */
+    private _resolve_place(ref: PlaceRef): Opt<Hub | Room> {
+        if (ref.tag === 'room') return this.room_repo.get(ref.id);
+        return this.hub_repo.get(ref.id);
+    }
 }

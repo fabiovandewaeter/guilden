@@ -2,7 +2,7 @@
 
 import type { Inventory } from "../inventory.svelte";
 import { err, ok, type Result } from "../utils/result";
-import type { ItemKind } from "./item.svelte";
+import type { ItemId, ItemKind } from "./item.svelte";
 import type { ItemRepository } from "./item_repository.svelte";
 import { matches_requirement } from "./item_service";
 import type { Quality } from "./quality.svelte";
@@ -21,7 +21,7 @@ export function consume_crating_materials(
     requirement: CraftingRequirement
 ): Result<void, string> {
     let remaining_to_find = requirement.amount;
-    const items_to_consume: { id: number, amount: number }[] = [];
+    const items_to_consume: { id: ItemId, amount: number }[] = [];
 
     for (const stack of inventory.items) {
         if (matches_requirement(stack.item_id, requirement, item_repo)) {

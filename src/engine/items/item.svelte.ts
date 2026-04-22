@@ -1,7 +1,7 @@
 // engine/items/item.svelte.ts
 import type { Quality } from "./quality.svelte";
 
-export type ItemId = number
+export type ItemId = number & { readonly __type: unique symbol };
 export type ItemKind = "iron" | "sword"
 export type ItemStack = {
     item_id: ItemId,

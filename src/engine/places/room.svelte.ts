@@ -1,9 +1,12 @@
 // engine/places/room.svelte.ts
 
 import type { EntityId } from "../entities/entity.svelte";
+import type { ItemRepository } from "../items/item_repository.svelte";
+import { Opt, none } from "../utils/option";
 import { err, ok, type Result } from "../utils/result";
+import type { ProductionComponent } from "./production_component.svelte";
 
-export type RoomId = number
+export type RoomId = number & { readonly __type: unique symbol };
 
 export class Room {
     readonly id: RoomId;
@@ -11,10 +14,17 @@ export class Room {
     entities: EntityId[] = $state([]);
     connected_rooms: RoomId[] = $state([]);
     // furtniture: Furniture[] = $state([]);
+    production: Opt<ProductionComponent> = $state(none);
 
     constructor(id: RoomId, name: string) {
         this.id = id;
         this.name = name;
+    }
+
+    tick(delta_ms: number, item_repo: ItemRepository) {
+        if (this.production.is_some()) {
+            this.production.value.tick(delta_ms, item_repo);
+        }
     }
 
     contains_entity(entity_id: EntityId): boolean {

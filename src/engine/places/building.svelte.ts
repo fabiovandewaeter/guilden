@@ -2,7 +2,7 @@
 import { err, ok, type Result } from "../utils/result";
 import type { RoomId } from "./room.svelte";
 
-export type BuildingId = number;
+export type BuildingId = number & { readonly __type: unique symbol };
 
 export class Building {
     readonly id: BuildingId;

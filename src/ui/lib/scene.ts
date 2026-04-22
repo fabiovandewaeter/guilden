@@ -1,12 +1,14 @@
 // src/ui/scene.ts
 import type { EntityId } from "../../engine/entities/entity.svelte";
-import type { PlaceId } from "../../engine/places/place.svelte";
-import type { Opt } from "../../engine/utils/option";
+import type { BuildingId } from "../../engine/places/building.svelte";
+import type { HubId } from "../../engine/places/hub.svelte";
+import type { RoomId } from "../../engine/places/room.svelte";
 
 export type SceneKind = Scene['id'];
 
 export type Scene =
-    | { id: "hub"; place_id: PlaceId, from: Opt<Scene> }
-    | { id: "building"; place_id: PlaceId, from: Opt<Scene> }
-    | { id: "room"; place_id: PlaceId, from: Opt<Scene> }
-    | { id: "entity_inspect", entity_id: EntityId, from: Opt<Scene> }; // "from" pour revenir
+    | { id: "hub", hub_id: HubId }
+    | { id: "building", building_id: BuildingId }
+    | { id: "room", room_id: RoomId }
+    | { id: "entity_inspect", entity_id: EntityId }
+    | { id: "ERROR", message?: string };

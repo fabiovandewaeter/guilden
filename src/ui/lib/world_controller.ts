@@ -8,24 +8,21 @@ const world = new World();
 const scenes = new SceneManager();
 const clock = new Clock();
 
-// ==== places ==== 
+// === places =====================================================================
 // hub
-const hub_id = world.spawn_place("Hub", { id: "hub" });
+const hub_id = world.spawn_hub("Hub");
 // buildings
-const forge_id = world.spawn_forge("Forge")
-
-world.connect_places(hub_id, forge_id);
+const { building_id: forge_id, room_id: forge_room_id } = world.spawn_forge("Forge")
+world.hub_repo.get(hub_id).expect(`Can connect forge to hub: Hub ${hub_id} not found`).add_building(forge_id).assert_ok();
 
 // rooms
-const room_a_id = world.spawn_room("room_a")
+const room_a_id = world.spawn_room("Room A")
+world.connect_rooms(forge_room_id, room_a_id);
 
-world.connect_places(forge_id, room_a_id);
-// =============== 
-
-// entities
+// === entities ===================================================================
 const npc_id = world.spawn_entity(
     "Forgeron",
-    forge_id,
+    { tag: "room", id: forge_room_id },
     {
         hp: 10,
         mana: 1000,
@@ -34,7 +31,7 @@ const npc_id = world.spawn_entity(
 );
 
 // init starting scene
-scenes.navigate(DEFAULT_SCENE);
+scenes.enter_hub(hub_id);
 
 // save/timestamp
 const saved_timestamp = load_timestamp();

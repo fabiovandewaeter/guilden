@@ -3,10 +3,14 @@ import { Opt, some, none } from "./utils/option";
 import { type Result, err, ok } from "./utils/result";
 
 export abstract class GenericRepository<TId extends number, T> {
-    protected next_id: any = $state(0);
+    protected _next_id: number = $state(0);
     protected readonly elements: Record<TId, T> = $state({} as Record<TId, T>);
 
     constructor() { }
+
+    protected next_id(): number {
+        return this._next_id++;
+    }
 
     get(id: TId): Opt<T> {
         const res = this.elements[id];

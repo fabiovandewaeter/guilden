@@ -20,13 +20,15 @@
     >
     <p>{clock.timestamp}</p>
     {#if scene.id === "hub"}
-        <HubScene place_id={scene.place_id} />
+        <HubScene hub_id={scene.hub_id} />
     {:else if scene.id === "building"}
-        <BuildingScene place_id={scene.place_id} />
+        <BuildingScene building_id={scene.building_id} />
     {:else if scene.id === "room"}
-        <RoomScene place_id={scene.place_id} />
+        <RoomScene room_id={scene.room_id} />
     {:else if scene.id === "entity_inspect"}
         <EntityInspectScene entity_id={scene.entity_id} />
+    {:else if scene.id === "ERROR"}
+        {scene.message}
     {/if}
 </div>
 
