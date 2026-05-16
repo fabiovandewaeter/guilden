@@ -23,9 +23,9 @@ export class Building {
         const index = this.rooms.indexOf(room_id);
         if (index !== -1) {
             this.rooms.splice(index, 1);
-            return err(`${room_id} not found in place ${this.id}`);
+            return ok(undefined);
         }
-        return ok(undefined);
+        return err(`${room_id} not found in place ${this.id}`);
     }
 
     // abstract tick(delta_ms: number): void; production moved to Room

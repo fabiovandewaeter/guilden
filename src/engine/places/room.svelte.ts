@@ -40,9 +40,9 @@ export class Room {
         const index = this.entities.indexOf(entity_id);
         if (index !== -1) {
             this.entities.splice(index, 1);
-            return err(`${entity_id} not found in room ${this.id}`);
+            return ok(undefined);
         }
-        return ok(undefined);
+        return err(`${entity_id} not found in room ${this.id}`);
     }
 
     add_connected_room(connected_room_id: RoomId): Result<void, string> {
@@ -54,8 +54,8 @@ export class Room {
         const index = this.connected_rooms.indexOf(connected_room_id);
         if (index !== -1) {
             this.connected_rooms.splice(index, 1);
-            return err(`${connected_room_id} not found in room ${this.id}`);
+            return ok(undefined);
         }
-        return ok(undefined);
+        return err(`${connected_room_id} not found in room ${this.id}`);
     }
 }

@@ -18,6 +18,10 @@
     <button onclick={() => world.debug_manually_advance_time(3_600_000)}
         >+1 heure</button
     >
+    <button
+        onclick={() => world.debug_manually_advance_time(3_600_000 * 10000000)}
+        >+1 heure</button
+    >
     <p>{clock.timestamp}</p>
     {#if scene.id === "hub"}
         <HubScene hub_id={scene.hub_id} />

@@ -20,7 +20,7 @@ export class Hub {
 
     contains_entity(entity_id: EntityId): boolean {
         const index = this.entities.indexOf(entity_id);
-        return index != -1;
+        return index !== -1;
     }
     add_entity(entity_id: EntityId) {
         if (!this.entities.includes(entity_id)) {
@@ -31,9 +31,9 @@ export class Hub {
         const index = this.entities.indexOf(entity_id);
         if (index !== -1) {
             this.entities.splice(index, 1);
-            return err(`${entity_id} not found in hub ${this.id}`);
+            return ok(undefined);
         }
-        return ok(undefined);
+        return err(`${entity_id} not found in hub ${this.id}`);
     }
 
     add_building(building_id: BuildingId): Result<void, string> {
@@ -45,9 +45,9 @@ export class Hub {
         const index = this.buildings.indexOf(building_id);
         if (index !== -1) {
             this.buildings.splice(index, 1);
-            return err(`${building_id} not found in hub ${this.id}`);
+            return ok(undefined);
         }
-        return ok(undefined);
+        return err(`${building_id} not found in hub ${this.id}`);
     }
 
     add_connected_hub(connected_hub_id: HubId): Result<void, string> {
@@ -57,11 +57,10 @@ export class Hub {
     }
     remove_connected_hub(connected_hub_id: HubId): Result<void, string> {
         const index = this.connected_hubs.indexOf(connected_hub_id);
-
         if (index !== -1) {
             this.connected_hubs.splice(index, 1);
-            return err(`${connected_hub_id} not found in hub ${this.id}`);
+            return ok(undefined);
         }
-        return ok(undefined);
+        return err(`${connected_hub_id} not found in hub ${this.id}`);
     }
 }
