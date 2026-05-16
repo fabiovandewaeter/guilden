@@ -1,5 +1,8 @@
 // ui/states/world_controller.ts
 import { Clock } from "../../engine/clock";
+import { ARCHETYPES } from "../../engine/entities/archetype";
+import { PROFESSIONS } from "../../engine/entities/profession";
+import { SPECIES } from "../../engine/entities/species";
 import { RECIPES, type RecipeOutput } from "../../engine/items/recipe";
 import { ProductionComponent } from "../../engine/places/production_component.svelte";
 import { some } from "../../engine/utils/option";
@@ -41,7 +44,10 @@ const npc_id = world.spawn_entity(
         hp: 10,
         mana: 1000,
         attack: 100
-    }
+    },
+    SPECIES.human,
+    ARCHETYPES.tank,
+    PROFESSIONS.blacksmith,
 );
 
 // init starting scene

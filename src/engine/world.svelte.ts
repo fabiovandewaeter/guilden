@@ -12,6 +12,9 @@ import type { Building, BuildingId } from "./places/building.svelte";
 import type { Room, RoomId } from "./places/room.svelte";
 import { connect_hubs, connect_rooms, move_entity, spawn_forge } from "./places/place_service";
 import { InstancedItemRepository } from "./items/instanced_item_repository.svelte";
+import type { Species } from "./entities/species";
+import type { Archetype } from "./entities/archetype";
+import type { Profession } from "./entities/profession";
 
 export class World {
     private _state: GameState = $state({ mode: "hub" });
@@ -32,10 +35,10 @@ export class World {
     // SPAWNERS
     // ==========================================
     /** spawn entity AND move it to the place but fail if assignated place doesn't exist */
-    spawn_entity(name: string, place: PlaceRef, max_stats: Stats): EntityId {
-        this._resolve_place(place).expect(`Cannot spawn entity: place ${JSON.stringify(place)} not found`);
-        let entity_id = this.entity_repo.spawn(name, place, max_stats);
-        // move_entity(entity_id, place_id, this.place_repo, this.entity_repo);
+    spawn_entity(name: string, place_ref: PlaceRef, max_stats: Stats, species: Species, archetype: Archetype, profession: Profession): EntityId {
+        this._resolve_place(place_ref).expect(`Cannot spawn entity: place ${JSON.stringify(place_ref)} not found`);
+        let entity_id = this.entity_repo.spawn(name, max_stats, species, archetype, profession);
+        move_entity(entity_id, place_ref, this, this.entity_repo);
         return entity_id;
     }
 

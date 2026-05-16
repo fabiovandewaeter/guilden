@@ -15,3 +15,6 @@
 <button onclick={() => scenes.back()}>Return</button>
 <h2>{entity.name}</h2>
 <p>HP : {entity.max_stats.hp}</p>
+<p>species : {entity.species.name}</p>
+<p>archetype: {entity.archetype.name}</p>
+<p>profession: {entity.profession.name}</p>
