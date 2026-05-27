@@ -10,4 +10,4 @@ export const SPECIES = {
         name: "Human",
         //default_traits:[]
     }
-} satisfies Record<string, Species>;
+} as const satisfies Record<string, Species>;

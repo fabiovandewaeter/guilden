@@ -7,7 +7,6 @@ import type { BuildingId } from "./building.svelte";
 import type { BuildingRepository } from "./building_repository.svelte";
 import type { Hub, HubId } from "./hub.svelte";
 import type { PlaceRef } from "./place_ref.svelte";
-import { ProductionComponent } from "./production_component.svelte";
 import type { Room, RoomId } from "./room.svelte";
 import type { RoomRepository } from "./room_repository.svelte";
 
