@@ -1,12 +1,17 @@
 <!-- ui/components/navbar.svelte -->
 <script lang="ts">
     import type { HubId } from "../../engine/places/hub.svelte";
+    import { type RoomId } from "../../engine/places/room.svelte";
     import { scenes } from "../lib/world_controller";
 </script>
 
 <div class="navbar">
     <h2>Navbar</h2>
     <button onclick={() => scenes.enter_hub(0 as HubId)}>Hub</button>
+    <!-- TODO: changer l'id car c'est juste pour tester -->
+    <button onclick={() => scenes.enter_room(0 as RoomId)}
+        >DEBUG: Forge room A</button
+    >
 </div>
 
 <style>

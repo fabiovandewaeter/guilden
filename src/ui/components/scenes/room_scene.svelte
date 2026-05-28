@@ -10,12 +10,12 @@
 
     let { room_id }: Props = $props();
 
-    let room = $derived(world.get_room(room_id).unwrap());
+    let room = $derived(world.room_repo.get(room_id).unwrap());
     let connected_rooms = $derived(
-        room.connected_rooms.map((id) => world.get_room(id).unwrap()),
+        room.connected_rooms.map((id) => world.room_repo.get(id).unwrap()),
     );
     let npcs = $derived(
-        room.entities.map((id) => world.get_entity(id).unwrap()),
+        room.entities.map((id) => world.entity_repo.get(id).unwrap()),
     );
 </script>
 

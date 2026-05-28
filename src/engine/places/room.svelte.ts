@@ -32,35 +32,9 @@ export class Room {
         const index = this.entities.indexOf(entity_id);
         return index != -1;
     }
-    add_entity(entity_id: EntityId) {
-        // if (!this.entities.includes(entity_id)) {
-        //     this.entities.push(entity_id);
-        // }
-        return list_add(this.entities, entity_id, `room ${this.id} entities`);
-    }
-    remove_entity(entity_id: EntityId): Result<void, string> {
-        // const index = this.entities.indexOf(entity_id);
-        // if (index !== -1) {
-        //     this.entities.splice(index, 1);
-        //     return ok(undefined);
-        // }
-        // return err(`${entity_id} not found in room ${this.id}`);
-        return list_remove(this.entities, entity_id, `room ${this.id} entities`);
-    }
+    add_entity(entity_id: EntityId) { return list_add(this.entities, entity_id, `room ${this.id} entities`); }
+    remove_entity(entity_id: EntityId): Result<void, string> { return list_remove(this.entities, entity_id, `room ${this.id} entities`); }
 
-    add_connected_room(connected_room_id: RoomId): Result<void, string> {
-        // if (this.connected_rooms.includes(connected_room_id)) return err(`${connected_room_id} already is a connected_room of room ${this.id}`);
-        // this.connected_rooms.push(connected_room_id);
-        // return ok(undefined);
-        return list_add(this.connected_rooms, connected_room_id, `room ${this.id} connected_rooms`);
-    }
-    remove_connected_room(connected_room_id: RoomId): Result<void, string> {
-        // const index = this.connected_rooms.indexOf(connected_room_id);
-        // if (index !== -1) {
-        //     this.connected_rooms.splice(index, 1);
-        //     return ok(undefined);
-        // }
-        // return err(`${connected_room_id} not found in room ${this.id}`);
-        return list_remove(this.connected_rooms, connected_room_id, `room ${this.id} connected_rooms`);
-    }
+    add_connected_room(connected_room_id: RoomId): Result<void, string> { return list_add(this.connected_rooms, connected_room_id, `room ${this.id} connected_rooms`); }
+    remove_connected_room(connected_room_id: RoomId): Result<void, string> { return list_remove(this.connected_rooms, connected_room_id, `room ${this.id} connected_rooms`); }
 }

@@ -4,6 +4,7 @@ import { ARCHETYPES } from "../../engine/entities/archetype";
 import { PROFESSIONS } from "../../engine/entities/profession";
 import { SPECIES } from "../../engine/entities/species";
 import { RECIPES, type RecipeOutput } from "../../engine/items/recipe";
+import { connect_rooms, spawn_forge } from "../../engine/places/place_service";
 import { ProductionComponent } from "../../engine/places/production_component.svelte";
 import { some } from "../../engine/utils/option";
 import { World } from "../../engine/world.svelte";
@@ -18,11 +19,11 @@ const clock = new Clock();
 // PLACES
 // ==========================================
 // hub
-const hub_id = world.spawn_hub("Hub");
+const hub_id = world.hub_repo.spawn("Hub");
 // buildings
-const { building_id: forge_id, room_id: forge_room_id } = world.spawn_forge("Forge")
+const { building_id: forge_id, room_id: forge_room_id } = spawn_forge("Forge", world.building_repo, world.room_repo);
 world.hub_repo.get(hub_id).expect(`Can connect forge to hub: Hub ${hub_id} not found`).add_building(forge_id).assert_ok();
-const forge_room = world.get_room(forge_room_id).unwrap();
+const forge_room = world.room_repo.get(forge_room_id).unwrap();
 forge_room.production = some(new ProductionComponent(RECIPES.iron_ingot));
 forge_room.production.unwrap().input.add_stackable({
     kind: "iron_ore",
@@ -31,8 +32,8 @@ forge_room.production.unwrap().input.add_stackable({
 }, 2000);
 
 // rooms
-const room_a_id = world.spawn_room("Room A")
-world.connect_rooms(forge_room_id, room_a_id);
+const room_a_id = world.room_repo.spawn("Room A")
+connect_rooms(forge_room_id, room_a_id, world);
 
 // ==========================================
 // ENTITIES

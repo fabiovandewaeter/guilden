@@ -9,7 +9,7 @@
 
     let { entity_id }: Props = $props();
 
-    let entity = $derived(world.get_entity(entity_id).unwrap());
+    let entity = $derived(world.entity_repo.get(entity_id).unwrap());
 </script>
 
 <button onclick={() => scenes.back()}>Return</button>

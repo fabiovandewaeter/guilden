@@ -11,7 +11,7 @@ import type { Room, RoomId } from "./room.svelte";
 import type { RoomRepository } from "./room_repository.svelte";
 
 /** return the Room or Hub corresponding to the place_ref */
-function resolve(place_ref: PlaceRef, world: World): Room | Hub {
+export function resolve_place(place_ref: PlaceRef, world: World): Room | Hub {
     if (place_ref.tag === 'room') return world.room_repo.get(place_ref.id).expect(`Room ${place_ref.id} not found`);
     return world.hub_repo.get(place_ref.id).expect(`Hub ${place_ref.id} not found`);
 }
@@ -25,10 +25,10 @@ export function move_entity(
     const entity = entity_repo.get(entity_id).expect(`Entity ${entity_id} not found`);
 
     if (entity.place.is_some()) {
-        resolve(entity.place.value, world).remove_entity(entity_id).assert_ok();
+        resolve_place(entity.place.value, world).remove_entity(entity_id).assert_ok();
     }
 
-    resolve(dest, world).add_entity(entity_id);
+    resolve_place(dest, world).add_entity(entity_id);
 
     entity.place = some(dest);
 }

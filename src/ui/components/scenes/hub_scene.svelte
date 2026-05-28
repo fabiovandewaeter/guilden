@@ -9,15 +9,15 @@
 
     let { hub_id }: Props = $props();
 
-    let hub = $derived(world.get_hub(hub_id).unwrap());
+    let hub = $derived(world.hub_repo.get(hub_id).unwrap());
     let buildings = $derived(
-        hub.buildings.map((id) => world.get_building(id).unwrap()),
+        hub.buildings.map((id) => world.building_repo.get(id).unwrap()),
     );
     let connected_hubs = $derived(
-        hub.connected_hubs.map((id) => world.get_hub(id).unwrap()),
+        hub.connected_hubs.map((id) => world.hub_repo.get(id).unwrap()),
     );
     let npcs = $derived(
-        hub.entities.map((id) => world.get_entity(id).unwrap()),
+        hub.entities.map((id) => world.entity_repo.get(id).unwrap()),
     );
 </script>
 

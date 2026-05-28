@@ -9,9 +9,9 @@
 
     let { building_id }: Props = $props();
 
-    let building = $derived(world.get_building(building_id).unwrap());
+    let building = $derived(world.building_repo.get(building_id).unwrap());
     let rooms = $derived(
-        building.rooms.map((id) => world.get_room(id).unwrap()),
+        building.rooms.map((id) => world.room_repo.get(id).unwrap()),
     );
 </script>
 
