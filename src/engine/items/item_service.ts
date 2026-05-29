@@ -1,6 +1,6 @@
 // engine/items/item_service.ts
 
-import type { CraftingRequirement } from "./crafting_service";
+import type { CraftingRequirement } from "../production/crafting_service";
 import type { ItemArchetype } from "./item_archetype";
 
 export function archetype_matches_requirement(archetype: ItemArchetype, requirement: CraftingRequirement): boolean {

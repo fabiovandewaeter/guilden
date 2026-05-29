@@ -1,6 +1,6 @@
-// engine/items/recipe.ts
+// engine/production/recipe.ts
 import type { CraftingRequirement } from "./crafting_service";
-import type { ItemKind } from "./item_kind";
+import type { ItemKind } from "../items/item_kind";
 
 export type RecipeOutput = {
     kind: ItemKind;

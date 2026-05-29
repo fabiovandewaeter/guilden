@@ -1,12 +1,20 @@
-// engine/element_repository.svelte.ts
-import { Opt, some, none } from "./utils/option";
-import { type Result, err, ok } from "./utils/result";
+// engine/core/repository.svelte.ts
 
-export abstract class GenericRepository<TId extends number, T> {
+import { Opt, some, none } from "../utils/option";
+import { err, type Result, ok } from "../utils/result";
+
+export class Repository<T, TId extends number, TArgs extends any[] = []> {
     protected _next_id: number = $state(0);
     protected readonly elements: Record<TId, T> = $state({} as Record<TId, T>);
 
-    constructor() { }
+    constructor(private factory: (id: TId, ...args: TArgs) => T) { }
+
+    // Generic spawn method utilizing the factory
+    spawn(...args: TArgs): TId {
+        const id = this.next_id() as TId;
+        this.elements[id] = this.factory(id, ...args);
+        return id;
+    }
 
     protected next_id(): number {
         return this._next_id++;

@@ -1,14 +1,11 @@
-// engine/places/place.ts
-import type { EntityId } from "../entities/entity.svelte";
-import type { EntityRepository } from "../entities/entity_repository.svelte";
+// engine/places/place_service.ts
+import type { World } from "../core/world.svelte";
+import type { EntityId, EntityRepository } from "../entities/entity.svelte";
 import { none, some } from "../utils/option";
-import type { World } from "../world.svelte";
-import type { BuildingId } from "./building.svelte";
-import type { BuildingRepository } from "./building_repository.svelte";
+import type { BuildingId, BuildingRepository } from "./building.svelte";
 import type { Hub, HubId } from "./hub.svelte";
 import type { PlaceRef } from "./place_ref.svelte";
-import type { Room, RoomId } from "./room.svelte";
-import type { RoomRepository } from "./room_repository.svelte";
+import type { Room, RoomId, RoomRepository } from "./room.svelte";
 
 /** return the Room or Hub corresponding to the place_ref */
 export function resolve_place(place_ref: PlaceRef, world: World): Room | Hub {

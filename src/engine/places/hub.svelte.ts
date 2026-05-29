@@ -1,10 +1,12 @@
 // engine/places/hub.svelte.ts
+import type { Repository } from "../core/repository.svelte";
 import type { EntityId } from "../entities/entity.svelte";
 import { list_add, list_remove } from "../utils/collection";
-import { err, ok, type Result } from "../utils/result";
+import { type Result } from "../utils/result";
 import type { BuildingId } from "./building.svelte";
 
 export type HubId = number & { readonly __type: unique symbol };
+export type HubRepositoy = Repository<Hub, HubId, [string]>;
 
 // hub, plain, road ...
 export class Hub {

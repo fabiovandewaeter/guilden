@@ -1,9 +1,11 @@
 // engine/places/building.svelte.ts
+import type { Repository } from "../core/repository.svelte";
 import { list_add, list_remove } from "../utils/collection";
-import { err, ok, type Result } from "../utils/result";
+import { type Result } from "../utils/result";
 import type { RoomId } from "./room.svelte";
 
 export type BuildingId = number & { readonly __type: unique symbol };
+export type BuildingRepository = Repository<Building, BuildingId, [string]>;
 
 export class Building {
     readonly id: BuildingId;

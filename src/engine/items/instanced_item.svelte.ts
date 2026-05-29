@@ -1,9 +1,11 @@
 // engine/items/item.svelte.ts
+import type { Repository } from "../core/repository.svelte";
 import type { ItemArchetype } from "./item_archetype";
 import type { ItemKind } from "./item_kind";
 import type { Quality } from "./quality.svelte";
 
 export type InstancedItemId = number & { readonly __type: unique symbol };
+export type InstancedItemRepository = Repository<InstancedItem, InstancedItemId, [string, ItemArchetype]>;
 // export type ItemStack = { item_id: ItemId, amount: number };
 
 /** Non-stackable items */

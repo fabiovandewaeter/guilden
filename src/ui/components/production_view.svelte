@@ -1,6 +1,6 @@
 <!-- ui/components/production_view.svelte -->
 <script lang="ts">
-    import type { ProductionComponent } from "../../engine/places/production_component.svelte";
+    import type { ProductionComponent } from "../../engine/production/production_component.svelte";
 
     interface Props {
         production: ProductionComponent;

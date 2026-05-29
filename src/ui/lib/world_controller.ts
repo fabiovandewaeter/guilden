@@ -1,15 +1,15 @@
 // ui/states/world_controller.ts
-import { Clock } from "../../engine/clock";
-import { ARCHETYPES } from "../../engine/entities/archetype";
 import { PROFESSIONS } from "../../engine/entities/profession";
 import { SPECIES } from "../../engine/entities/species";
-import { RECIPES, type RecipeOutput } from "../../engine/items/recipe";
+import { RECIPES, type RecipeOutput } from "../../engine/production/recipe";
 import { connect_rooms, spawn_forge } from "../../engine/places/place_service";
-import { ProductionComponent } from "../../engine/places/production_component.svelte";
+import { ProductionComponent } from "../../engine/production/production_component.svelte";
 import { some } from "../../engine/utils/option";
-import { World } from "../../engine/world.svelte";
 import { load_timestamp, save_timestamp } from "./save";
 import { SceneManager } from "./scene_manager.svelte";
+import { Clock } from "../../engine/core/clock";
+import { World } from "../../engine/core/world.svelte";
+import { ENTITY_ARCHETYPES } from "../../engine/entities/entity_archetype";
 
 const world = new World();
 const scenes = new SceneManager();
@@ -47,7 +47,7 @@ const npc_id = world.spawn_entity(
         attack: 100
     },
     SPECIES.human,
-    ARCHETYPES.tank,
+    ENTITY_ARCHETYPES.tank,
     PROFESSIONS.blacksmith,
 );
 

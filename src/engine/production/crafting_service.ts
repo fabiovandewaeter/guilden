@@ -1,11 +1,11 @@
-// engine/items/crafting_service.ts
+// engine/production/crafting_service.ts
 
-import type { Inventory } from "./inventory.svelte";
+import type { Inventory } from "../items/inventory.svelte";
 import { err, ok, type Result } from "../utils/result";
-import type { ItemKind } from "./item_kind";
-import type { ItemArchetype } from "./item_archetype";
-import { archetype_matches_requirement } from "./item_service";
-import type { Quality } from "./quality.svelte";
+import type { ItemKind } from "../items/item_kind";
+import type { ItemArchetype } from "../items/item_archetype";
+import { archetype_matches_requirement } from "../items/item_service";
+import type { Quality } from "../items/quality.svelte";
 
 /** AND requirements except for qualities where it's OR */
 export type CraftingRequirement = {

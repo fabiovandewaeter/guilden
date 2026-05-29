@@ -1,13 +1,14 @@
 // engine/places/room.svelte.ts
 
 import type { EntityId } from "../entities/entity.svelte";
-import type { InstancedItemRepository } from "../items/instanced_item_repository.svelte";
+import type { Repository } from "../core/repository.svelte";
 import { list_add, list_remove } from "../utils/collection";
 import { Opt, none } from "../utils/option";
-import { err, ok, type Result } from "../utils/result";
-import type { ProductionComponent } from "./production_component.svelte";
+import { type Result } from "../utils/result";
+import type { ProductionComponent } from "../production/production_component.svelte";
 
 export type RoomId = number & { readonly __type: unique symbol };
+export type RoomRepository = Repository<Room, RoomId, [string]>;
 
 export class Room {
     readonly id: RoomId;
@@ -20,12 +21,6 @@ export class Room {
     constructor(id: RoomId, name: string) {
         this.id = id;
         this.name = name;
-    }
-
-    tick(delta_ms: number, instanced_item_repo: InstancedItemRepository) {
-        if (this.production.is_some()) {
-            this.production.value.tick(delta_ms, instanced_item_repo);
-        }
     }
 
     contains_entity(entity_id: EntityId): boolean {

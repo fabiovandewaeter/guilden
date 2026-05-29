@@ -1,4 +1,4 @@
-// engine/clock.ts
+// engine/core/clock.ts
 
 export class Clock {
     private last_tick_timestamp: number; // timestamp in ms
