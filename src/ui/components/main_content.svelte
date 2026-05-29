@@ -1,6 +1,6 @@
 <!-- ui/components/main_content.svelte -->
 <script lang="ts">
-    import { clock, scenes, world } from "../lib/world_controller";
+    import { scenes, world } from "../lib/world_controller";
     import BuildingScene from "./scenes/building_scene.svelte";
     import EntityInspectScene from "./scenes/entity_inspect_scene.svelte";
     import HubScene from "./scenes/hub_scene.svelte";
@@ -23,7 +23,16 @@
             world.debug_manually_advance_time(7 * 24 * 60 * 60 * 1000)}
         >+1 week
     </button>
-    <p>{clock.timestamp}</p>
+    <p>{world.clock.timestamp}</p>
+    <p>{Math.floor(world.clock.accumulated_time / 1_000)} seconds</p>
+    <p>{Math.floor(world.clock.accumulated_time / (1_000 * 60))} minutes</p>
+    <p>{Math.floor(world.clock.accumulated_time / (1_000 * 60 * 60))} hours</p>
+    <p>
+        {Math.floor(world.clock.accumulated_time / (1_000 * 60 * 60 * 24))} days
+    </p>
+    <p>
+        {Math.floor(world.clock.accumulated_time / (1_000 * 60 * 60 * 24 * 7))} weeks
+    </p>
     {#if scene.id === "hub"}
         <HubScene hub_id={scene.hub_id} />
     {:else if scene.id === "building"}

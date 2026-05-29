@@ -7,13 +7,12 @@ import { ProductionComponent } from "../../engine/production/production_componen
 import { some } from "../../engine/utils/option";
 import { load_timestamp, save_timestamp } from "./save";
 import { SceneManager } from "./scene_manager.svelte";
-import { Clock } from "../../engine/core/clock";
+import { Clock } from "../../engine/core/clock.svelte";
 import { World } from "../../engine/core/world.svelte";
 import { ENTITY_ARCHETYPES } from "../../engine/entities/entity_archetype";
 
 const world = new World();
 const scenes = new SceneManager();
-const clock = new Clock();
 
 // ==========================================
 // PLACES
@@ -29,7 +28,7 @@ forge_room.production.unwrap().input.add_stackable({
     kind: "iron_ore",
     quality: "Broken",
     level: 0
-}, 2000);
+}, 1_000_000_000_000);
 
 // rooms
 const room_a_id = world.room_repo.spawn("Room A")
@@ -62,9 +61,9 @@ if (saved_timestamp.is_some()) {
 }
 
 setInterval(() => {
-    const delta = clock.tick();
+    const delta = world.clock.tick();
     world.update(delta);
-    save_timestamp(clock.timestamp);
+    save_timestamp(world.clock.timestamp);
 }, 5000);
 
 // save before closing the window
@@ -72,4 +71,4 @@ window.addEventListener("beforeunload", () => {
     save_timestamp(Date.now());
 });
 
-export { world, scenes, clock };
+export { world, scenes };
